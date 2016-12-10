@@ -1,25 +1,26 @@
 #{{ ansible_managed }}
-upstream old-site {
-    server 127.0.0.1:{{ item.old_inst_port }};
-}
 
 server {
     listen 80;
 
     # optional ssl configuration
-
     #listen 443 ssl;
     #ssl_certificate /path/to/ssl/pem_file;
     #ssl_certificate_key /path/to/ssl/certificate_key;
-
     # end of optional ssl configuration
 
     server_name  _;
 
-    access_log  /home/vagrant/oldapps/{{ item.old_inst_name }}/access.log;
+    access_log  /home/vagrant/oldapps/access.log;
 
+    {% for old in old_instances %}
 
-    location / {
+    location = /{{ old.old_inst_name }} {
+        return 302 /{{ old.old_inst_name }}/;
+    }
+
+    location /{{ old.old_inst_name }}/ {
+        access_log  /home/vagrant/oldapps/{{ old.old_inst_name }}/access.log;
         proxy_set_header        Host $http_host;
         proxy_set_header        X-Real-IP $remote_addr;
         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -32,8 +33,9 @@ server {
         proxy_read_timeout      90s;
         proxy_buffering         off;
         proxy_temp_file_write_size 64k;
-        proxy_pass http://old-site;
+        proxy_pass              http://localhost:{{ old.old_inst_port }}/;
         proxy_redirect          off;
     }
-}
 
+    {% endfor %}
+}
