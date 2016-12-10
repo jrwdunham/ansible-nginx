@@ -1,12 +1,7 @@
 #{{ ansible_managed }}
 upstream old-site {
     server 127.0.0.1:{{ item.old_inst_port }};
-    #server 127.0.0.1:5001;
 }
-
-# old_inst_name: "testold"
-# old_inst_port: "5000"
-# reset_db: "no"
 
 server {
     listen 80;
@@ -41,3 +36,4 @@ server {
         proxy_redirect          off;
     }
 }
+
