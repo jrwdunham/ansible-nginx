@@ -1,0 +1,8 @@
+#{{ ansible_managed }}
+
+server {
+    listen 8000;
+    server_name  _;
+    access_log /home/vagrant/dative-access.log;
+    root /opt/dative/dist;
+}
