@@ -57,11 +57,14 @@
    - Reload nginx
   tags: [configuration,nginx]
 
-- name: Create links for sites-enabled
+- name: "Create symlinks to sites-enabled"
   file:
     state: "link"
-    src: "/etc/nginx/sites-available/olds.conf"
-    dest: "/etc/nginx/sites-enabled/olds.conf"
+    src: "/etc/nginx/sites-available/{{ item }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item }}.conf"
+  with_items:
+    - "olds"
+    - "dative"
   notify:
    - Reload nginx
   tags: [configuration,nginx]
