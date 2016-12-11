@@ -3,6 +3,6 @@
 server {
     listen 8000;
     server_name  _;
-    access_log /home/vagrant/dative-access.log;
-    root /opt/dative/dist;
+    access_log {{ dative_old_src_dir }}/dative-access.log;
+    root {{ dative_src_dir }}/dist;
 }
